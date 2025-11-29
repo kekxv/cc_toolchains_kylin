@@ -21,7 +21,7 @@ bazel_dep(name = "cc_toolchains_kylin", version = "0.0.1")
 
 git_override(
     module_name = "cc_toolchains_kylin",
-    commit = "a7b387cc1bc0b98ae69a372eee1f93f8cd45a672", # Check for the latest commit hash
+    commit = "3d1ee1f2ba860fc288f775d1cd71c574b2163e81", # Check for the latest commit hash
     remote = "https://github.com/kekxv/cc_toolchains_kylin.git",
 )
 ```
@@ -91,7 +91,7 @@ bazel_dep(name = "cc_toolchains_kylin", version = "0.0.1")
 
 git_override(
     module_name = "cc_toolchains_kylin",
-    commit = "a7b387cc1bc0b98ae69a372eee1f93f8cd45a672", # 请检查并使用最新的 commit hash
+    commit = "3d1ee1f2ba860fc288f775d1cd71c574b2163e81", # 请检查并使用最新的 commit hash
     remote = "https://github.com/kekxv/cc_toolchains_kylin.git",
 )
 ```

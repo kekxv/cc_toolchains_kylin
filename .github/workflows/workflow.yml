@@ -1,0 +1,37 @@
+name: workflow.yml
+on:
+  push:
+    branches: [ main ]
+jobs:
+  example:
+    name: Build example
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Install Bazel
+        uses: bazel-contrib/setup-bazel@0.15.0
+        with:
+          bazelisk-version: 1.x
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}
+          repository-cache: true
+      - name: Bazel Build example
+        working-directory: ./examples
+        run: |
+          bazel build --config=kylin :app
+      - name: check app
+        working-directory: ./examples
+        run: |
+          bazel run --config=kylin :app
+
+      - name: Bazel Build example(rules_foreign_cc)
+        working-directory: ./examples
+        run: |
+          bazel build --config=kylin third-party/fmtlib:test_fmt
+      - name: check test_fmt
+        working-directory: ./examples
+        run: |
+          bazel run --config=kylin third-party/fmtlib:test_fmt
+
+

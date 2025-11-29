@@ -1,0 +1,9 @@
+alias(
+    name = "kylin",
+    actual = "//platforms:kylin",
+)
+
+alias(
+    name = "kylin_toolchain",
+    actual = "//toolchain/kylin:kylin_toolchain",
+)

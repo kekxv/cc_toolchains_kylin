@@ -1,0 +1,49 @@
+load(":kylin_cc_config.bzl", "cc_toolchain_config")
+
+# toolchain/BUILD
+package(default_visibility = ["//visibility:public"])
+
+# 1. 定义一个空的文件组，因为使用的是系统预装的 GCC，不需要 Bazel 去下载或沙箱化文件
+filegroup(name = "empty")
+
+filegroup(
+    name = "toolchain_wrapper",
+    srcs = [
+        "wrapper/gcc.sh",
+    ],
+)
+
+# 2. 实例化配置规则
+cc_toolchain_config(
+    name = "kylin_config",
+)
+
+# 3. 定义 cc_toolchain
+cc_toolchain(
+    name = "kylin_compiler_toolchain",
+    all_files = ":toolchain_wrapper",
+    compiler_files = ":toolchain_wrapper",
+    dwp_files = ":empty",
+    linker_files = ":toolchain_wrapper",
+    objcopy_files = ":empty",
+    strip_files = ":empty",
+    supports_param_files = 0,
+    toolchain_config = ":kylin_config",
+    toolchain_identifier = "kylin-toolchain",
+)
+
+# 4. 定义 toolchain 并绑定到平台 (Linux x86_64)
+toolchain(
+    name = "kylin_toolchain",
+    exec_compatible_with = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+        "//platforms:glibc_2_23",
+    ],
+    target_compatible_with = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+    ],
+    toolchain = ":kylin_compiler_toolchain",
+    toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
+)

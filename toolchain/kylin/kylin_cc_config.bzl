@@ -1,4 +1,4 @@
-# toolchain/cc_toolchain_config.bzl
+load("@bazel_tools//tools/build_defs/cc:action_names.bzl", "ACTION_NAMES")
 load("@bazel_tools//tools/cpp:cc_toolchain_config_lib.bzl", "feature", "flag_group", "flag_set", "tool_path")
 
 def _impl(ctx):
@@ -57,6 +57,29 @@ def _impl(ctx):
             ),
         ],
     )
+    default_cpp_compile_flags_feature = feature(
+        name = "default_cpp_compile_flags",
+        enabled = True,  # 默认开启
+        flag_sets = [
+            flag_set(
+                actions = [
+                    ACTION_NAMES.cpp_compile,
+                    ACTION_NAMES.linkstamp_compile,
+                    ACTION_NAMES.cpp_header_parsing,
+                    ACTION_NAMES.cpp_module_compile,
+                    ACTION_NAMES.cpp_module_codegen,
+                ],
+                flag_groups = [
+                    flag_group(
+                        flags = [
+                            "-std=c++11",
+                            "-std=c++17",
+                        ],
+                    ),
+                ],
+            ),
+        ],
+    )
 
     # 关键：告诉 Bazel 哪些是系统内置的头文件路径
     # 如果编译时报 "stdio.h not found" 或类似错误，需要根据你的系统调整这里
@@ -68,7 +91,7 @@ def _impl(ctx):
 
     return cc_common.create_cc_toolchain_config_info(
         ctx = ctx,
-        features = [default_link_flags_feature],
+        features = [default_link_flags_feature, default_cpp_compile_flags_feature],
         cxx_builtin_include_directories = cxx_builtin_include_directories,
         toolchain_identifier = "kylin-toolchain",
         host_system_name = "local",
